@@ -1,0 +1,10 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    /* Optional: Adjust gap between items */
+    gap: 10px;
+}
+
+.item {
+    /* Styles for grid items */
+}
