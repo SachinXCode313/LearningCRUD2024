@@ -5,35 +5,47 @@ import {useNavigate} from 'react-router-dom'
 import './style/Users.css'
 
 function AddUser() {
-    const [userId,setUserId] = useState(1210)
+    const [userId,setUserId] = useState(20042)
     const [name, setName] = useState('')
     const [age, setAge] = useState('')
     const [phone, setPhone] = useState('')
     const [address, setAddress] = useState('')
+    const [usersList, setUsersList] = useState('')
+    const [lastId,setLastId] = useState(1)
+
 
 
     const navigate = useNavigate();
 
-    const fetchUsers = () => {
+    const fetchUsers = async() => {
         // Fetch users from your API or any data source
         // Example API call:
-        axios.get('/api/get')
-            .then((res) => {
-                setUsersList(res.data)
-            })
-            .catch(error => console.error('Error fetching users:', error));
+        try{
+            const res = await axios.get('/api/get');
+            if (res.data.length > 0) {
+                const lastUser = res.data[res.data.length - 1];
+                // setLastId(lastUser.id);
+                setUserId(lastUser.id+1);
+                // setUsersList(res.data);
+            }
+        }catch(err) {
+            console.error('Error fetching users:', err)
+            }
     };
 
-    // useEffect(() => {
-    //     fetchUsers();
-    // }, [])
+    useEffect(() => {
+        fetchUsers()
+        
+    }, [])
+
+
+
 
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setUserId((p)=>p+1)
-        console.log(userId)
+
         const Data = {
             id : userId,
             name: name,
@@ -42,13 +54,15 @@ function AddUser() {
             address: address
         }
         try {
-            const res = await axios.post('/api/create', Data)
-            // setName('')
-            // setAge('')
-            // setPhone('')
-            // setAddress('')
+            await axios.post('/api/create', Data)
+            setUserId(userId+1) 
+            setName('')
+            setAge('')
+            setPhone('')
+            setAddress('')
             // fetchUsers()
             navigate('/')
+            console.log("user is created")
         } catch (error) {
             console.error('Error:', error);
         }

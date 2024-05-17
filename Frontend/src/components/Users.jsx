@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import './style/Users.css'
 
 
-function User({ fetchUsers, handleSubmit }) {
+function User() {
 
     const [usersList, setUsersList] = useState([])
     const [editId, setEditId] = useState(-1)
@@ -20,6 +20,7 @@ function User({ fetchUsers, handleSubmit }) {
         .then((res) => {
             console.log("Received data:", res.data);
             setUsersList(res.data)
+            
         })
         .catch((err) => {
             console.log(err)
@@ -27,14 +28,10 @@ function User({ fetchUsers, handleSubmit }) {
     } 
 
 
-    const handleEdit = (id) => {
+    const handleEditId = (id) => {
         try{
             const user = usersList.find((user) => user.id === id);
             if (user) {
-                setName(user.name);
-                setAge(user.age);
-                setPhone(user.phone);
-                setAddress(user.address);
                 setEditId(id);
             }
         }catch(err){
@@ -42,21 +39,20 @@ function User({ fetchUsers, handleSubmit }) {
         }
     }
 
-    const handleDelete = async(id) => {
-        setDeleteId(id)
+    const handleDelete = async (id) => {
+        console.log(id)
         try{
-            const del = axios.delete(`/api/delete/${deleteId}`)
+            await axios.delete(`/api/delete/${id}`)
             console.log("User Deleted Succc...")
+            setUsersList(usersList.filter(user => user.id !== id))
         }catch(err){
             console.log(err)
         }
-        fetchData()
-
-
     }
 
     const handleUpdate = async (e) => {
         e.preventDefault()
+        
         const Data = {
             name : name,
             age : age,
@@ -85,8 +81,6 @@ function User({ fetchUsers, handleSubmit }) {
     // }
 
     useEffect(() => {
-
-
         fetchData()
     }, [])
 
@@ -109,7 +103,7 @@ function User({ fetchUsers, handleSubmit }) {
                     </tr>
                     {usersList.map((user, key) => (
                         user.id === editId ?
-                            <tr key={key}>
+                            <tr key={user.id}>
                                 <td>{user.id}</td>
                                 <td><input type="text" value={name} onChange={(e) => setName(e.target.value)}/></td>
                                 <td><input type="text" value={age} onChange={(e) => setAge(e.target.value)}/></td>
@@ -118,13 +112,13 @@ function User({ fetchUsers, handleSubmit }) {
                                 <td><button onClick={handleUpdate}>Update</button></td>
                             </tr>
                             :
-                            <tr key={key}>
+                            <tr key={user.id}>
                                 <td>{user.id}</td>
                                 <td>{user.name}</td>
                                 <td>{user.age}</td>
                                 <td>{user.phone}</td>
                                 <td>{user.address}</td>
-                                <td><button onClick={() => handleEdit(user.id)}>Edit</button><button onClick={() => handleDelete(user.id)}>Delete</button></td>
+                                <td><button onClick={() => handleEditId(user.id)}>Edit</button><button onClick={() => handleDelete(user.id)}>Delete</button></td>
                             </tr>
                     ))}
                 </table>

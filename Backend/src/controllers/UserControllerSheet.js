@@ -15,7 +15,7 @@ const getUser = async (req, res) => {
 
 //Create Users Data
 const createUser = async (req, res) => {
-  const { user, pass } = req.body;
+  const { id,name,age,phone,address} = req.body;
 
   const addRows = await googleSheets.spreadsheets.values.append({
     auth,
@@ -23,7 +23,7 @@ const createUser = async (req, res) => {
     range: "Sheet1!A:B",
     valueInputOption: "USER_ENTERED",
     resource: {
-      values: [[user, pass]],
+      values: [[id,name,age,phone,address]],
     },
   });
 };

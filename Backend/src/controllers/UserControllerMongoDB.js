@@ -1,9 +1,10 @@
 import UserModel from "../models/User.js";
+import { writeToSheet } from "./writeToSheet.js";
 
 const getUser = async (req, res) => {
   try {
     const user = await UserModel.find();
-    console.log(user);
+    // console.log(user);
     res.send(user);
   } catch (error) {
     console.log(error);
@@ -12,7 +13,7 @@ const getUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { id, name, age, phone, address } = req.body;
+    const {id,name, age, phone, address } = req.body;
     const newUser = new UserModel({
       id,
       name,
@@ -20,14 +21,18 @@ const createUser = async (req, res) => {
       phone,
       address,
     });
-
     await newUser.save();
-    res
-      .status(200)
-      .json({ success: true, Message: "User Created Successfully", newUser });
+
+    // Write user data to Google Sheet
+    await writeToSheet(req);
+    
+    res.status(201).json(newUser);
+
+
+    // res.status(200).json({ success: true, Message: "User Created Successfully", newUser });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, Message: "server error ", newUser });
+    // res.status(500).json({ success: false, Message: "server error ", newUser });
   }
 };
 
