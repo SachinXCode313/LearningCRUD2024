@@ -5,6 +5,7 @@ import './style/Users.css'
 
 function User() {
 
+    const [usersRecord, setUsersRecord] = useState([])
     const [usersList, setUsersList] = useState([])
     const [editId, setEditId] = useState(-1)
     const [deleteId, setDeleteId] = useState(-1)
@@ -12,13 +13,14 @@ function User() {
     const [age, setAge] = useState('')
     const [phone, setPhone] = useState('')
     const [address, setAddress] = useState('')
-    const [searchId, setSearchId] = useState('')
+    const [searchId, setSearchId] = useState(0)
 
 
     const fetchData = async () => {
         axios.get('/api/get')
         .then((res) => {
             console.log("Received data:", res.data);
+            setUsersRecord(res.data)
             setUsersList(res.data)
             
         })
@@ -33,6 +35,10 @@ function User() {
             const user = usersList.find((user) => user.id === id);
             if (user) {
                 setEditId(id);
+                setName(user.name)
+                setAge(user.age)
+                setPhone(user.phone)
+                setAddress(user.address)
             }
         }catch(err){
             console.log(err)
@@ -76,9 +82,18 @@ function User() {
         setEditId(-1)
     }
 
-    // const handleSearch = () => {
-    //     const searchUser = usersList.find(user => )
-    // }
+    const handleSearch = (e) => {
+        console.log(e.target.value)
+        console.log(typeof(e.target.value))
+        try{
+            console.log("User Is Found...")
+            setUsersList(usersRecord.filter(user => user.name.toLowerCase().includes(e.target.value)))
+            
+            console.log(usersList)
+        }catch(err){
+            console.log(err)
+        }
+    }
 
     useEffect(() => {
         fetchData()
@@ -87,8 +102,8 @@ function User() {
     return (
         <>
             <h2 className='item'>Users Lists</h2>
-            <input type="text" placeholder='Search Id' />
-            <label htmlFor=""><button>Search</button></label>
+            <input type="text" placeholder='Search Id' onChange={handleSearch}/>
+            {/* <label htmlFor=""><button onClick={handleSearch}>Search</button></label> */}
             <p>No of users : {usersList.length}</p>
 
             <div className="App">
@@ -106,8 +121,8 @@ function User() {
                             <tr key={user.id}>
                                 <td>{user.id}</td>
                                 <td><input type="text" value={name} onChange={(e) => setName(e.target.value)}/></td>
-                                <td><input type="text" value={age} onChange={(e) => setAge(e.target.value)}/></td>
-                                <td><input type="text" value={phone} onChange={(e) => setPhone(e.target.value)}/></td>
+                                <td><input type="number" value={age} onChange={(e) => setAge(e.target.value)}/></td>
+                                <td><input type="number" value={phone} onChange={(e) => setPhone(e.target.value)}/></td>
                                 <td><input type="text" value={address} onChange={(e) => setAddress(e.target.value)}/></td>
                                 <td><button onClick={handleUpdate}>Update</button></td>
                             </tr>

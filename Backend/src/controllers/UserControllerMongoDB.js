@@ -24,7 +24,7 @@ const createUser = async (req, res) => {
     await newUser.save();
 
     // Write user data to Google Sheet
-    await writeToSheet(req);
+    // await writeToSheet(req);
     
     res.status(201).json(newUser);
 
