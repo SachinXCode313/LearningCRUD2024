@@ -87,7 +87,7 @@ function User() {
         console.log(typeof(e.target.value))
         try{
             console.log("User Is Found...")
-            setUsersList(usersRecord.filter(user => user.name.toLowerCase().includes(e.target.value)))
+            setUsersList(usersRecord.filter(user => String(user.id).includes(e.target.value)))
             
             console.log(usersList)
         }catch(err){
@@ -102,7 +102,7 @@ function User() {
     return (
         <>
             <h2 className='item'>Users Lists</h2>
-            <input type="text" placeholder='Search Id' onChange={handleSearch}/>
+            <input type="string" placeholder='Search Id' onChange={handleSearch}/>
             {/* <label htmlFor=""><button onClick={handleSearch}>Search</button></label> */}
             <p>No of users : {usersList.length}</p>
 
