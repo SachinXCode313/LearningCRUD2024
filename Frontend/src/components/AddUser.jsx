@@ -1,53 +1,53 @@
-import { useEffect, useState} from 'react'
+
+import { useEffect, useState } from 'react'
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import * as React from 'react';
+import { Modal, Box, Button, TextField, Typography } from '@mui/material';
 
 import './style/Users.css'
 
 function AddUser() {
-    const [userId,setUserId] = useState(20042)
+    const [userId, setUserId] = useState(20042)
     const [name, setName] = useState('')
     const [age, setAge] = useState('')
     const [phone, setPhone] = useState('')
     const [address, setAddress] = useState('')
     const [usersList, setUsersList] = useState('')
-    const [lastId,setLastId] = useState(1)
+    const [lastId, setLastId] = useState(1)
+
+
 
 
 
     const navigate = useNavigate();
 
-    const fetchUsers = async() => {
+    const fetchUsers = async () => {
         // Fetch users from your API or any data source
         // Example API call:
-        try{
+        try {
             const res = await axios.get('/api/get');
             if (res.data.length > 0) {
                 const lastUser = res.data[res.data.length - 1];
                 // setLastId(lastUser.id);
-                setUserId(lastUser.id+1);
+                setUserId(lastUser.id + 1);
                 // setUsersList(res.data);
             }
-        }catch(err) {
+        } catch (err) {
             console.error('Error fetching users:', err)
-            }
+        }
     };
 
     useEffect(() => {
         fetchUsers()
-        
+
     }, [])
-
-
-
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const Data = {
-            id : userId,
+            id: userId,
             name: name,
             age: age,
             phone: phone,
@@ -55,7 +55,7 @@ function AddUser() {
         }
         try {
             await axios.post('/api/create', Data)
-            setUserId(userId+1) 
+            setUserId(userId + 1)
             setName('')
             setAge('')
             setPhone('')
@@ -87,6 +87,8 @@ function AddUser() {
                 <br />
                 <button type="submit">Submit</button>
             </form>
+
+           
 
 
         </>

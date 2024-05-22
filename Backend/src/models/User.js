@@ -10,5 +10,4 @@ const userSchema = mongoose.Schema({
 
 const UserModel = mongoose.model('userReg' , userSchema);
 
-
 export default UserModel;
